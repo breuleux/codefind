@@ -1,7 +1,6 @@
 import gc
-import os
+import importlib
 import sys
-# from .audit import register_audit
 import time
 import types
 from collections import defaultdict
@@ -91,6 +90,14 @@ class CodeRegistry:
         self.functions[old_code].discard(obj)
         self.functions[new_code].add(obj)
 
+    def find_code(self, *path, filename=None, module=None, lineno=None):
+        if module is not None:
+            assert filename is None
+            filename = importlib.import_module(module).__file__
+        assert filename is not None
+        path = (filename, *path, lineno)
+        return self.codes[path]
+
     def conform(self, obj1, obj2, use_cache=False):
         if hasattr(obj1, "__conform__"):
             obj1.__conform__(obj2)
@@ -123,37 +130,3 @@ class CodeRegistry:
 
         else:  # pragma: no cover
             raise ConformException(f"Cannot conform {obj1} with {obj2}")
-
-
-# class _FileCache:
-#     def __init__(self):
-#         self.filename_to_module = {}
-#         self.cache = {}
-
-#     def setup(self):
-#         self.collect_all()
-#         register_audit("import", self.process_import)
-
-#     def collect_all(self):
-#         for module_name, module in sys.modules.items():
-#             fname = getattr(module, "__file__", None)
-#             if fname:
-#                 self.process_import(module_name, fname)
-
-#     def process_import(self, module_name, filename, *rest):
-#         if filename is not None:
-#             if module_name is not None:
-#                 self.filename_to_module[filename] = module_name
-#             try:
-#                 self.cache[filename] = (
-#                     os.path.getmtime(filename),
-#                     open(filename).read()
-#                 )
-#             except (UnicodeDecodeError, OSError):
-#                 pass
-
-# code_registry = _CodeRegistry()
-# code_registry.setup()
-
-# file_cache = _FileCache()
-# file_cache.setup()

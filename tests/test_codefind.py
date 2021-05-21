@@ -3,7 +3,7 @@ import pytest
 import codefind
 
 from . import alaska
-from .alaska import adder, divver, ice, muller, plus_one
+from .alaska import adder, ice, muller, plus_one
 
 plus_two = adder(2)
 
@@ -105,3 +105,20 @@ def test_qualnames_closure():
     reg = codefind.code_registry
     assert reg.codes[alaska.__file__, "adderz", "f", 17] is alaska.pluz_one.__code__
     assert reg.codes[alaska.__file__, "adderz", "f", None] is alaska.pluz_one.__code__
+
+
+def test_find_code():
+    assert (
+        codefind.find_code("adderz", "f", module="tests.alaska")
+        is alaska.pluz_one.__code__
+    )
+    assert (
+        codefind.find_code("adderz", "f", filename=alaska.__file__)
+        is alaska.pluz_one.__code__
+    )
+    assert (
+        codefind.find_code("adderz", "f", module="tests.alaska", lineno=17)
+        is alaska.pluz_one.__code__
+    )
+    with pytest.raises(KeyError):
+        codefind.find_code("adderz", "f", module="tests.alaska", lineno=39)
