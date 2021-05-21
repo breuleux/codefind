@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "codefind"
+version = "0.1.0"
+description = "Find code objects and their referents"
+authors = ["Olivier Breuleux <breuleux@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.4"
+pytest-cov = "^2.11.1"
+black = "^21.5b1"
+isort = "^5.8.0"
+flake8 = "^3.9.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
