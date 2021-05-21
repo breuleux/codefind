@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "codefind"
-version = "0.0.0"
+version = "0.1.0"
 description = "Find code objects and their referents"
 authors = ["Olivier Breuleux <breuleux@gmail.com>"]
 license = "MIT"
