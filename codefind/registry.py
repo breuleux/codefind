@@ -67,9 +67,8 @@ class CodeRegistry:
         else:
             name = code.co_name
         if name:
-            self._setcodepaths(
-                [(*path, name, code.co_firstlineno), (*path, name, None)], code
-            )
+            path = (*path, name)
+            self._setcodepaths([(*path, code.co_firstlineno), (*path, None)], code)
         for ct in code.co_consts:
             if isinstance(ct, types.CodeType):
                 self.assimilate(ct, path)
