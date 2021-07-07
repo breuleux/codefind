@@ -28,6 +28,7 @@ class ConformException(Exception):
 class CodeRegistry:
     def __init__(self):
         self.codes = {}
+        self.backcodes = defaultdict(set)
         self.functions = defaultdict(set)
         self.last_cost = 0
         self.always_use_cache = False
@@ -52,6 +53,11 @@ class CodeRegistry:
                 self.assimilate(co, (co.co_filename, *qualpath))
             self.functions[co].add(obj)
 
+    def _setcodepaths(self, paths, code):
+        for p in paths:
+            self.codes[p] = code
+        self.backcodes[code].update(paths)
+
     def assimilate(self, code, path=()):
         if code.co_name == "<module>":  # pragma: no cover
             # Typically triggered by the audit hook
@@ -61,9 +67,9 @@ class CodeRegistry:
         else:
             name = code.co_name
         if name:
-            path = (*path, name)
-            self.codes[(*path, code.co_firstlineno)] = code
-            self.codes[(*path, None)] = code
+            self._setcodepaths(
+                [(*path, name, code.co_firstlineno), (*path, name, None)], code
+            )
         for ct in code.co_consts:
             if isinstance(ct, types.CodeType):
                 self.assimilate(ct, path)
@@ -89,6 +95,7 @@ class CodeRegistry:
     def update_cache_entry(self, obj, old_code, new_code):
         self.functions[old_code].discard(obj)
         self.functions[new_code].add(obj)
+        self._setcodepaths(self.backcodes[old_code], new_code)
 
     def find_code(self, *path, filename=None, module=None, lineno=None):
         if module is not None:

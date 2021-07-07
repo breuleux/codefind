@@ -122,3 +122,15 @@ def test_find_code():
     )
     with pytest.raises(KeyError):
         codefind.find_code("adderz", "f", module="tests.alaska", lineno=39)
+
+
+def test_find_code_after_conform():
+    assert codefind.find_code("snow", module="tests.alaska") is alaska.snow.__code__
+
+    codefind.conform(alaska.snow, alaska.snow2)
+
+    assert codefind.find_code("snow", module="tests.alaska") is alaska.snow2.__code__
+
+    codefind.conform(alaska.snow, alaska.snow3)
+
+    assert codefind.find_code("snow", module="tests.alaska") is alaska.snow3.__code__

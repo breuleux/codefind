@@ -51,3 +51,15 @@ class Bear(Animal):
 
     def evolve(self):
         return super().evolve()
+
+
+def snow(x):
+    return x * x
+
+
+def snow2(x):
+    return x * x * x
+
+
+def snow3(x):
+    return x * x * x * x
