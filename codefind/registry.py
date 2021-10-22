@@ -28,6 +28,7 @@ class ConformException(Exception):
 class CodeRegistry:
     def __init__(self):
         self.codes = {}
+        self.currcodes = {}
         self.backcodes = defaultdict(set)
         self.functions = defaultdict(set)
         self.last_cost = 0
@@ -55,7 +56,8 @@ class CodeRegistry:
 
     def _setcodepaths(self, paths, code):
         for p in paths:
-            self.codes[p] = code
+            self.codes.setdefault(p, code)
+            self.currcodes[p] = code
         self.backcodes[code].update(paths)
 
     def assimilate(self, code, path=()):
@@ -102,7 +104,7 @@ class CodeRegistry:
             filename = importlib.import_module(module).__file__
         assert filename is not None
         path = (filename, *path, lineno)
-        return self.codes[path]
+        return self.currcodes[path]
 
     def conform(self, obj1, obj2, use_cache=False):
         if hasattr(obj1, "__conform__"):
