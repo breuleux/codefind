@@ -42,12 +42,16 @@ class CodeRegistry:
         # Collect code objects
         results = []
         for obj in gc.get_objects():
-            if isinstance(obj, types.FunctionType):
-                results.append((obj, obj.__code__))
-            elif getattr_static(obj, "__conform__", None) is not None:
-                for x in gc.get_referents(obj):
-                    if isinstance(x, types.CodeType):
-                        results.append((obj, x))
+            try:
+                if isinstance(obj, types.FunctionType):
+                    results.append((obj, obj.__code__))
+                elif getattr_static(obj, "__conform__", None) is not None:
+                    for x in gc.get_referents(obj):
+                        if isinstance(x, types.CodeType):
+                            results.append((obj, x))
+            except ReferenceError:
+                # Object got deleted
+                pass
         for obj, co in results:
             if isinstance((qual := getattr(obj, "__qualname__", None)), str):
                 qualpath = [part for part in qual.split(".")[:-1] if part != "<locals>"]
