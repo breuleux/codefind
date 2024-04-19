@@ -49,7 +49,7 @@ class CodeRegistry:
                     for x in gc.get_referents(obj):
                         if isinstance(x, types.CodeType):
                             results.append((obj, x))
-            except ReferenceError:
+            except ReferenceError:  # pragma: no cover
                 # Object got deleted
                 pass
         for obj, co in results:
