@@ -1,5 +1,5 @@
-from .registry import CodeRegistry, ConformException
-from .version import version
+from .registry import CodeRegistry, ConformException  # noqa: F401
+from .version import version  # noqa: F401
 
 code_registry = CodeRegistry()
 code_registry.setup()

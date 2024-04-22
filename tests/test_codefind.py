@@ -21,7 +21,10 @@ def test_get_functions():
 
 
 def test_get_functions_closure():
-    assert set(codefind.get_functions(plus_one.__code__)) == {plus_one, plus_two}
+    assert set(codefind.get_functions(plus_one.__code__)) == {
+        plus_one,
+        plus_two,
+    }
 
 
 def test_get_functions_cache():
@@ -103,8 +106,14 @@ def test_qualnames():
 
 def test_qualnames_closure():
     reg = codefind.code_registry
-    assert reg.codes[alaska.__file__, "adderz", "f", 17] is alaska.pluz_one.__code__
-    assert reg.codes[alaska.__file__, "adderz", "f", None] is alaska.pluz_one.__code__
+    assert (
+        reg.codes[alaska.__file__, "adderz", "f", 17]
+        is alaska.pluz_one.__code__
+    )
+    assert (
+        reg.codes[alaska.__file__, "adderz", "f", None]
+        is alaska.pluz_one.__code__
+    )
 
 
 def test_find_code():
@@ -125,12 +134,21 @@ def test_find_code():
 
 
 def test_find_code_after_conform():
-    assert codefind.find_code("snow", module="tests.alaska") is alaska.snow.__code__
+    assert (
+        codefind.find_code("snow", module="tests.alaska")
+        is alaska.snow.__code__
+    )
 
     codefind.conform(alaska.snow, alaska.snow2)
 
-    assert codefind.find_code("snow", module="tests.alaska") is alaska.snow2.__code__
+    assert (
+        codefind.find_code("snow", module="tests.alaska")
+        is alaska.snow2.__code__
+    )
 
     codefind.conform(alaska.snow, alaska.snow3)
 
-    assert codefind.find_code("snow", module="tests.alaska") is alaska.snow3.__code__
+    assert (
+        codefind.find_code("snow", module="tests.alaska")
+        is alaska.snow3.__code__
+    )

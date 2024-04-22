@@ -54,7 +54,9 @@ class CodeRegistry:
                 pass
         for obj, co in results:
             if isinstance((qual := getattr(obj, "__qualname__", None)), str):
-                qualpath = [part for part in qual.split(".")[:-1] if part != "<locals>"]
+                qualpath = [
+                    part for part in qual.split(".")[:-1] if part != "<locals>"
+                ]
                 self.assimilate(co, (co.co_filename, *qualpath))
             self.functions[co].add(obj)
 
@@ -74,7 +76,9 @@ class CodeRegistry:
             name = code.co_name
         if name:
             path = (*path, name)
-            self._setcodepaths([(*path, code.co_firstlineno), (*path, None)], code)
+            self._setcodepaths(
+                [(*path, code.co_firstlineno), (*path, None)], code
+            )
         for ct in code.co_consts:
             if isinstance(ct, types.CodeType):
                 self.assimilate(ct, path)
@@ -91,7 +95,9 @@ class CodeRegistry:
         return results
 
     def get_functions(self, code, use_cache=False):
-        use_cache = use_cache or self.always_use_cache or self.last_cost > MAX_TIME
+        use_cache = (
+            use_cache or self.always_use_cache or self.last_cost > MAX_TIME
+        )
         if use_cache and (results := self.functions[code]):
             return list(results)
         else:
