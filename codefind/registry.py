@@ -68,8 +68,14 @@ class CodeRegistry:
 
     def assimilate(self, code, path=()):
         if code.co_name == "<module>":  # pragma: no cover
-            # Typically triggered by the audit hook
-            name = code.co_filename
+            # TODO: Not tested and I forget what the problem is.
+            # I had to add a condition, because it seems that it would get
+            # triggered in other situations.
+            if not path or path[-1] != code.co_filename:
+                # Typically triggered by the audit hook
+                name = code.co_filename
+            else:
+                name = None
         elif code.co_name.startswith("<"):
             return
         else:
