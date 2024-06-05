@@ -76,7 +76,9 @@ class CodeRegistry:
                 name = code.co_filename
             else:
                 name = None
-        elif code.co_name.startswith("<generic parameters of"):  # pragma: no cover
+        elif code.co_name.startswith(
+            "<generic parameters of"
+        ):  # pragma: no cover
             # We'll loop through the co_consts which contains the actual class
             name = None
         elif code.co_name.startswith("<"):
